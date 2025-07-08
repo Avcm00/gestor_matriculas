@@ -2,68 +2,593 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Gestor de Matrículas{% endblock %}</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Sistema de Gestión de Matrículas | Universidad{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --sidebar-bg: #1e293b;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: linear-gradient(180deg, var(--sidebar-bg) 0%, #334155 100%);
+            min-height: 100vh;
+            width: 280px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            bottom: 0;
+            overflow-y: auto;
+            padding-bottom: 2rem;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem;
+        }
+
+        .nav-section-title {
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .nav-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar-nav-item {
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar-nav-item:hover {
+            background-color: var(--sidebar-hover);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .sidebar-nav-item.active {
+            background-color: var(--sidebar-hover);
+            color: white;
+        }
+
+        .sidebar-nav-item i {
+            width: 1.25rem;
+            margin-right: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .sidebar-nav-sub-item {
+            padding: 0.5rem 1rem;
+            padding-left: 2.5rem;
+            font-size: 0.875rem;
+            color: #94a3b8;
+        }
+
+        .sidebar-nav-sub-item:hover {
+            color: #cbd5e1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .top-header {
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+        }
+
+        .logo-icon i {
+            color: white;
+            font-size: 1.125rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1f2937;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .stats-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.125rem;
+        }
+
+        .stats-number {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0.5rem 0 0.25rem 0;
+        }
+
+        .stats-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .stats-change {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .stats-change.positive {
+            color: #059669;
+        }
+
+        .stats-change.negative {
+            color: #dc2626;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e5e7eb;
+            min-height: 24rem;
+        }
+
+        /* Breadcrumb */
+        .custom-breadcrumb {
+            background: none;
+            padding: 0;
+            margin-bottom: 2rem;
+        }
+
+        .custom-breadcrumb .breadcrumb-item a {
+            color: #6b7280;
+            text-decoration: none;
+        }
+
+        .custom-breadcrumb .breadcrumb-item a:hover {
+            color: var(--primary-color);
+        }
+
+        .custom-breadcrumb .breadcrumb-item.active {
+            color: #1f2937;
+            font-weight: 500;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-icon {
+            width: 6rem;
+            height: 6rem;
+            background: #dbeafe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .welcome-icon i {
+            color: var(--primary-color);
+            font-size: 2rem;
+        }
+
+        /* User Dropdown */
+        .user-dropdown {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .user-dropdown:hover {
+            background: #f1f5f9;
+        }
+
+        .user-avatar {
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.5rem;
+        }
+
+        .user-avatar i {
+            color: white;
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .mobile-toggle {
+                display: block !important;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+        }
+
+        /* Footer */
+        .custom-footer {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 1.5rem 2rem;
+            margin-top: 2rem;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="container mx-auto p-6">
-    <h1 class="text-3xl font-bold text-center mb-6">Sistema de Matrículas</h1>
-    
-    <!-- BARRA DE NAVEGACIÓN HORIZONTAL -->
-    <nav class="mb-8">
-      <div class="bg-white shadow-md rounded-lg overflow-hidden">
-        <div class="flex flex-wrap justify-center items-center p-4 gap-2">
-          <!-- Gestión Académica -->
-          <a href="{% url 'estudiante_list' %}" class="bg-blue-500 text-white px-4 py-2 rounded text-center hover:bg-blue-600 transition duration-300 flex-shrink-0">
-            📚 Estudiante
-          </a>
-          <a href="{% url 'carrera_list' %}" class="bg-green-500 text-white px-4 py-2 rounded text-center hover:bg-green-600 transition duration-300 flex-shrink-0">
-            🎓 Carrera
-          </a>
-          <a href="{% url 'modalidad_list' %}" class="bg-purple-500 text-white px-4 py-2 rounded text-center hover:bg-purple-600 transition duration-300 flex-shrink-0">
-            📖 Modalidad
-          </a>
-          <a href="{% url 'periodo_list' %}" class="bg-yellow-500 text-white px-4 py-2 rounded text-center hover:bg-yellow-600 transition duration-300 flex-shrink-0">
-            📅 Período academico
-          </a>
-          <a href="{% url 'matricula_list' %}" class="bg-red-500 text-white px-4 py-2 rounded text-center hover:bg-red-600 transition duration-300 flex-shrink-0">
-            ✍️ Matrícula
-          </a>
-          <a href="{% url 'estado_list' %}" class="bg-indigo-500 text-white px-4 py-2 rounded text-center hover:bg-indigo-600 transition duration-300 flex-shrink-0">
-            📋 Estado de Matricula
-          </a>
-          <a href="{% url 'campo_list' %}" class="bg-lime-500 text-white px-4 py-2 rounded text-center hover:bg-lime-600 transition duration-300 flex-shrink-0">
-            📚 Campo de Estudio
-          </a>
-          
-          <!-- Gestión de Pagos -->
-          <a href="{% url 'pago_list' %}" class="bg-emerald-500 text-white px-4 py-2 rounded text-center hover:bg-emerald-600 transition duration-300 flex-shrink-0">
-            💳 Pago
-          </a>
-          <a href="{% url 'metodopago_list' %}" class="bg-teal-500 text-white px-4 py-2 rounded text-center hover:bg-teal-600 transition duration-300 flex-shrink-0">
-            💰 Método de Pago
-          </a>
-          
-          <!-- Ubicación Geográfica -->
-          <a href="{% url 'pais_list' %}" class="bg-orange-500 text-white px-4 py-2 rounded text-center hover:bg-orange-600 transition duration-300 flex-shrink-0">
-            🏳️ País
-          </a>
-          <a href="{% url 'division_list' %}" class="bg-pink-500 text-white px-4 py-2 rounded text-center hover:bg-pink-600 transition duration-300 flex-shrink-0">
-            🗺️ Division Politica
-          </a>
-          <a href="{% url 'ciudad_list' %}" class="bg-cyan-500 text-white px-4 py-2 rounded text-center hover:bg-cyan-600 transition duration-300 flex-shrink-0">
-            🏙️ Ciudad
-          </a>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-nav">
+            <!-- Logo Section -->
+            <div class="d-flex align-items-center mb-4">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 class="text-white">Sistema</h1>
+                    <p class="text-white-50">Matrículas</p>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="nav-section-title">Gestión de Estudiantes</div>
+            <a href="{% url 'estudiante_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-users text-primary"></i>
+                Estudiantes
+            </a>
+
+            <div class="nav-section-title">Configuración Académica</div>
+            <a href="{% url 'periodo_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-calendar-alt text-success"></i>
+                Períodos Académicos
+            </a>
+            
+            <a href="{% url 'carrera_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-book" style="color: #8b5cf6;"></i>
+                Carreras
+            </a>
+            <a href="{% url 'campo_list' %}" class="sidebar-nav-item ">
+                <i class="fas fa-book"></i>
+                Campo de Estudio
+            </a>
+            
+            <a href="{% url 'modalidad_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-cogs text-warning"></i>
+                Modalidades
+            </a>
+            
+
+            <div class="nav-section-title">Gestión de Matrículas</div>
+            <a href="{% url 'estado_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-flag" style="color: #eab308;"></i>
+                Estados de Matrícula
+            </a>
+            <a href="{% url 'matricula_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-flag" style="color: #eab308;"></i>
+                Matrícula
+            </a>
+
+            <div class="nav-section-title">Gestión Financiera</div>
+            <a href="{% url 'pago_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-credit-card text-success"></i>
+                Pagos
+            </a>
+            <a href="{% url 'metodopago_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-wallet text-info"></i>
+                Métodos de Pago
+            </a>
+            <a href="{% url 'ciudad_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-wallet text-info"></i>
+                Ciudad
+            </a>
+            <a href="{% url 'division_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-wallet text-info"></i>
+                Division Politica
+            </a>
+            <a href="{% url 'pais_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-wallet text-info"></i>
+                Pais
+            </a>
         </div>
-      </div>
     </nav>
-    
-    <div class="bg-white shadow-md rounded-lg p-6">
-      {% block content %}{% endblock %}
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="top-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-outline-secondary mobile-toggle me-3" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="logo-container d-lg-none">
+                        <div class="logo-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>Sistema de Matrículas</h1>
+                            <p>Gestión Académica Universitaria</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dropdown">
+                    <button class="btn user-dropdown dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="fw-medium">Administrador</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Page Content -->
+        <div class="container-fluid px-4 py-4">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="custom-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Sistema de Matrículas</li>
+                </ol>
+            </nav>
+
+            <!-- Stats Cards -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stats-label">Total Estudiantes</div>
+                                <div class="stats-number">1,234</div>
+                                <div class="stats-change positive">+12% este mes</div>
+                            </div>
+                            <div class="stats-icon" style="background-color: #dbeafe; color: #2563eb;">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stats-label">Matrículas Activas</div>
+                                <div class="stats-number">892</div>
+                                <div class="stats-change positive">+8% este mes</div>
+                            </div>
+                            <div class="stats-icon" style="background-color: #dcfce7; color: #16a34a;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stats-label">Pagos Pendientes</div>
+                                <div class="stats-number">156</div>
+                                <div class="stats-change negative">-3% este mes</div>
+                            </div>
+                            <div class="stats-icon" style="background-color: #fee2e2; color: #dc2626;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
+                    <div class="stats-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="stats-label">Ingresos del Mes</div>
+                                <div class="stats-number">$45,320</div>
+                                <div class="stats-change positive">+15% este mes</div>
+                            </div>
+                            <div class="stats-icon" style="background-color: #fef3c7; color: #d97706;">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Card -->
+            <div class="content-card">
+                <div class="p-4">
+                    {% block content %}
+                    <div class="welcome-section">
+                        <div class="welcome-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h2 class="h3 fw-bold text-dark mb-3">Bienvenido al Sistema de Matrículas</h2>
+                        <p class="text-muted mb-4" style="max-width: 28rem; margin: 0 auto;">
+                            Gestiona estudiantes, períodos académicos, carreras y procesos de matrícula de manera eficiente y organizada.
+                        </p>
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <a href="{% url 'estudiante_list' %}" class="btn btn-primary px-4 py-2">
+                                <i class="fas fa-users me-2"></i>Ver Estudiantes
+                            </a>
+                            <a href="{% url 'carrera_create' %}" class="btn btn-outline-secondary px-4 py-2">
+                                <i class="fas fa-plus me-2"></i>Nueva Carrera
+                            </a>
+                        </div>
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="custom-footer">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <p class="text-muted mb-0 small">© 2025 Sistema de Matrículas Universitarias. Todos los derechos reservados.</p>
+                <div class="d-flex gap-4">
+                    <a href="#" class="text-muted text-decoration-none small">Soporte</a>
+                    <a href="#" class="text-muted text-decoration-none small">Documentación</a>
+                    <a href="#" class="text-muted text-decoration-none small">Contacto</a>
+                </div>
+            </div>
+        </footer>
     </div>
-  </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Sidebar toggle for mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('show');
+                });
+            }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 991.98) {
+                    if (!sidebar.contains(event.target) && !sidebarToggle.contains(event.target)) {
+                        sidebar.classList.remove('show');
+                    }
+                }
+            });
+
+            // Add active class to current nav item
+            const navItems = document.querySelectorAll('.sidebar-nav-item');
+            const currentPath = window.location.pathname;
+            
+            navItems.forEach(item => {
+                if (item.getAttribute('href') && item.getAttribute('href').includes(currentPath)) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Smooth animations for cards
+            const cards = document.querySelectorAll('.stats-card, .content-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
 </body>
 </html>

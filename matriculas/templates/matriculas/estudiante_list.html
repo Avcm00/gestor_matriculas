@@ -1,14 +1,42 @@
 {% extends 'matriculas/base.html' %}
 {% block title %}Estudiantes{% endblock %}
 {% block content %}
-  <a href="{% url 'estudiante_create' %}" class="bg-green-500 text-white px-4 py-2 rounded">Nuevo Estudiante</a>
-  <a href="{% url 'matricula_create' %}" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded">Registrar Matrícula</a>
-  <table class="table-auto w-full mt-4 bg-white shadow rounded">
-    <thead><tr><th>Nombre</th><th>Apellido</th><th>Cédula</th></tr></thead>
-    <tbody>
-      {% for e in object_list %}
-      <tr><td>{{ e.nombre }}</td><td>{{ e.apellido }}</td><td>{{ e.cedula }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="d-flex flex-column h-100">
+  <div class="mb-3">
+    <a href="{% url 'estudiante_create' %}" class="btn btn-primary">Nuevo Estudiante</a>
+  </div>
+
+  <div class="flex-grow-1 overflow-auto">
+    <table class="table table-bordered table-striped table-hover w-100">
+      <thead class="table-dark">
+        <tr>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Cédula</th>
+          <th>Fecha de nacimiento</th>
+          <th>Género</th>
+          <th>Número de celular</th>
+          <th>Correo electrónico</th>
+          <th>Ciudad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in object_list %}
+        <tr>
+          <td>{{ e.nombre }}</td>
+          <td>{{ e.apellido }}</td>
+          <td>{{ e.cedula }}</td>
+          <td>{{ e.fecha_nacimiento }}</td>
+          <td>{{ e.genero }}</td>
+          <td>{{ e.celular }}</td>
+          <td>{{ e.correo }}</td>
+          <td>{{ e.ciudad }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}
+

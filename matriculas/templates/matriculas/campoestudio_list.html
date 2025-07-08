@@ -2,27 +2,31 @@
 {% extends 'matriculas/base.html' %}
 {% block title %}Campos de Estudio{% endblock %}
 {% block content %}
-  <a href="{% url 'campo_create' %}" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
-    Nuevo Campo de Estudio
-  </a>
-  <table class="table-auto w-full bg-white shadow rounded">
-    <thead class="bg-gray-200">
-      <tr>
-        <th class="px-4 py-2">ID</th>
-        <th class="px-4 py-2">Nombre</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for campo in object_list %}
-      <tr class="border-t">
-        <td class="px-4 py-2">{{ campo.id }}</td>
-        <td class="px-4 py-2">{{ campo.nombre }}</td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="2" class="px-4 py-2 text-center">No hay campos de estudio registrados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="bg-gray-800 p-4">
+  <a href="{% url 'campo_create' %}" class="btn btn-primary mb-3">
+  Nuevo Campo de Estudio
+</a>
+</div>
+<table class="table table-bordered table-striped table-hover w-100">
+  <thead class="bg-gray-200">
+    <tr>
+      <th class="px-4 py-2">ID</th>
+      <th class="px-4 py-2">Nombre</th>
+      <th class="px-4 py-2">Acciones</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for campo in object_list %}
+    <tr class="border-t">
+      <td class="px-4 py-2">{{ campo.id }}</td>
+      <td class="px-4 py-2">{{ campo.nombre }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="2" class="px-4 py-2 text-center">No hay campos de estudio registrados.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

@@ -4,6 +4,6 @@
   <h2 class="text-xl font-semibold mb-4">Registrar Método de Pago</h2>
   <form method="post" class="space-y-4">{% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Guardar</button>
+    <button type="submit" class="btn btn-primary mb-3">Guardar</button>
   </form>
 {% endblock %}

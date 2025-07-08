@@ -1,10 +1,10 @@
 {% extends 'matriculas/base.html' %}
 {% block title %}Pagos Registrados{% endblock %}
 {% block content %}
-  <a href="{% url 'pago_create' %}" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">
+  <a href="{% url 'pago_create' %}" class="btn btn-primary mb-3">
     Nuevo Pago
   </a>
-  <table class="table-auto w-full bg-white shadow rounded">
+  <table class="table table-bordered table-striped table-hover w-100">
     <thead class="bg-gray-200">
       <tr>
         <th class="px-4 py-2">ID</th>
@@ -13,6 +13,8 @@
         <th class="px-4 py-2">Monto</th>
         <th class="px-4 py-2">Método</th>
         <th class="px-4 py-2">Estado</th>
+        <th class="px-4 py-2">Acciones</th>
+      
       </tr>
     </thead>
     <tbody>
