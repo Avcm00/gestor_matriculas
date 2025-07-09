@@ -325,68 +325,65 @@
                 <div class="logo-icon">
                     <i class="fas fa-graduation-cap"></i>
                 </div>
-                <div class="logo-text">
-                    <h1 class="text-white">Sistema</h1>
-                    <p class="text-white-50">Matrículas</p>
+                <div class="logo-text ms-2">
+                    <h1 class="text-white h5 mb-0">Sistema</h1>
+                    <small class="text-white-50">Matrículas</small>
                 </div>
             </div>
-
-            <!-- Navigation -->
+        
+            <!-- Navegación -->
             <div class="nav-section-title">Gestión de Estudiantes</div>
             <a href="{% url 'estudiante_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-users text-primary"></i>
+                <i class="fas fa-users text-primary me-2"></i>
                 Estudiantes
             </a>
             <a href="{% url 'curso_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-users text-primary"></i>
+                <i class="fas fa-chalkboard-teacher text-primary me-2"></i>
                 Curso
             </a>
             <a href="{% url 'oferta_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-users text-primary"></i>
+                <i class="fas fa-layer-group text-primary me-2"></i>
                 Oferta-curso
             </a>
-
+        
             <div class="nav-section-title">Configuración Académica</div>
             <a href="{% url 'periodo_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-calendar-alt text-success"></i>
+                <i class="fas fa-calendar-alt text-success me-2"></i>
                 Períodos Académicos
             </a>
-            
             <a href="{% url 'carrera_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-book" style="color: #8b5cf6;"></i>
+                <i class="fas fa-book text-violet me-2" style="color: #8b5cf6;"></i>
                 Carreras
             </a>
-            <a href="{% url 'campo_list' %}" class="sidebar-nav-item ">
-                <i class="fas fa-book"></i>
+            <a href="{% url 'campo_list' %}" class="sidebar-nav-item">
+                <i class="fas fa-book-open me-2"></i>
                 Campo de Estudio
             </a>
-            
-            
-
+        
             <div class="nav-section-title">Gestión de Matrículas</div>
-            
             <a href="{% url 'matricula_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-flag" style="color: #eab308;"></i>
+                <i class="fas fa-flag me-2" style="color: #eab308;"></i>
                 Matrícula
             </a>
-
+        
             <div class="nav-section-title">Gestión Financiera</div>
             <a href="{% url 'pago_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-credit-card text-success"></i>
+                <i class="fas fa-credit-card text-success me-2"></i>
                 Pagos
             </a>
-            
+        
+            <div class="nav-section-title">Ubicación</div>
             <a href="{% url 'ciudad_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-wallet text-info"></i>
+                <i class="fas fa-city text-secondary me-2"></i>
                 Ciudad
             </a>
             <a href="{% url 'division_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-wallet text-info"></i>
-                Division Politica
+                <i class="fas fa-map-marked-alt text-info me-2"></i>
+                División Política
             </a>
             <a href="{% url 'pais_list' %}" class="sidebar-nav-item">
-                <i class="fas fa-wallet text-info"></i>
-                Pais
+                <i class="fas fa-globe-americas text-info me-2"></i>
+                País
             </a>
         </div>
     </nav>
