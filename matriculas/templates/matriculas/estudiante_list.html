@@ -24,14 +24,22 @@
       <tbody>
         {% for e in object_list %}
         <tr>
-          <td>{{ e.nombre }}</td>
-          <td>{{ e.apellido }}</td>
-          <td>{{ e.cedula }}</td>
-          <td>{{ e.fecha_nacimiento }}</td>
-          <td>{{ e.genero }}</td>
-          <td>{{ e.celular }}</td>
-          <td>{{ e.correo }}</td>
-          <td>{{ e.ciudad }}</td>
+          <td class="px-4 py-2">{{ e.nombre }}</td>
+          <td class="px-4 py-2">{{ e.apellido }}</td>
+          <td class="px-4 py-2">{{ e.cedula }}</td>
+          <td class="px-4 py-2">{{ e.fecha_nacimiento }}</td>
+          <td class="px-4 py-2">{{ e.genero }}</td>
+          <td class="px-4 py-2">{{ e.celular }}</td>
+          <td class="px-4 py-2">{{ e.correo }}</td>
+          <td class="px-4 py-2">{{ e.id_ciudad }}</td>
+           <td class="text-center">
+              <a href="{% url 'estudiante_update' e.pk %}" class="text-primary me-2" title="Editar">
+                  <i class="bi bi-pencil-square"></i>
+              </a>
+              <a href="{% url 'estudiante_delete' e.pk %}" class="text-danger" title="Eliminar">
+                  <i class="bi bi-trash-fill"></i>
+              </a>
+          </td>
         </tr>
         {% endfor %}
       </tbody>

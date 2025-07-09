@@ -1,0 +1,56 @@
+<div class="student-info">
+    <div class="info-item">
+        <div class="info-label">Nombre Completo:</div>
+        <div class="info-value">{{ estudiante.nombre }} {{ estudiante.apellido }}</div>
+    </div>
+    
+    <div class="info-item">
+        <div class="info-label">Cédula:</div>
+        <div class="info-value">{{ estudiante.cedula }}</div>
+    </div>
+    
+    <div class="info-item">
+        <div class="info-label">Email:</div>
+        <div class="info-value">{{ estudiante.email|default:"No especificado" }}</div>
+    </div>
+    
+    <div class="info-item">
+        <div class="info-label">Teléfono:</div>
+        <div class="info-value">{{ estudiante.telefono|default:"No especificado" }}</div>
+    </div>
+    
+    <div class="info-item">
+        <div class="info-label">Fecha de Nacimiento:</div>
+        <div class="info-value">{{ estudiante.fecha_nacimiento|date:"d/m/Y"|default:"No especificado" }}</div>
+    </div>
+    
+    <div class="info-item">
+        <div class="info-label">Género:</div>
+        <div class="info-value">{{ estudiante.genero|default:"No especificado" }}</div>
+    </div>
+</div>
+
+{% if matriculas %}
+<div class="matriculas-history">
+    <h5>Historial de Matrículas</h5>
+    {% for matricula in matriculas %}
+    <div class="matricula-item">
+        <div class="row">
+            <div class="col-md-6">
+                <strong>Carrera:</strong> {{ matricula.id_modalidad_carrera.id_carrera.nombre }}<br>
+                <strong>Modalidad:</strong> {{ matricula.id_modalidad_carrera.id_modalidad.nombre }}
+            </div>
+            <div class="col-md-6">
+                <strong>Período:</strong> {{ matricula.id_periodo.nombre }}<br>
+                <strong>Estado:</strong> {{ matricula.id_estado.nombre }}<br>
+                <strong>Fecha:</strong> {{ matricula.fecha_matricula|date:"d/m/Y" }}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>Este estudiante no tiene matrículas registradas.</p>
+</div>
+{% endif %}

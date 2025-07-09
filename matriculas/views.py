@@ -1,5 +1,6 @@
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView
+from django.db.models import Q
+from django.views.generic import ListView, CreateView, UpdateView,DeleteView
 from .models import (
     SGM_P_Campo_Estudio,
     SGM_P_Ciudad,
@@ -40,6 +41,9 @@ from .forms import (
 )
 
 # ——— Estudiantes ———
+
+
+
 class EstudianteListView(ListView):
     model = SGM_M_Estudiante
     template_name = "matriculas/estudiante_list.html"
@@ -54,7 +58,17 @@ class EstudianteCreateView(CreateView):
     form_class = EstudianteForm
     template_name = "matriculas/estudiante_form.html"
     success_url = reverse_lazy('estudiante_list')
+class EstudianteUpdateView(UpdateView):
+    model = SGM_M_Estudiante
+    form_class = EstudianteForm
+    template_name = "matriculas/estudiante_form.html"
+    success_url = reverse_lazy('estudiante_list')
 
+
+class EstudianteDeleteView(DeleteView):
+    model = SGM_M_Estudiante
+    template_name = "matriculas/delete.html"
+    success_url = reverse_lazy('estudiante_list')
 
 # ——— Períodos Académicos ———
 class PeriodoListView(ListView):
@@ -123,17 +137,36 @@ class MatriculaListView(ListView):
     template_name = "matriculas/matricula_list.html"
     context_object_name = 'matriculas'
     paginate_by = 20
-    
+
     def get_queryset(self):
-        return SGM_T_Matricula.objects.select_related(
-            'id_estudiante', 
-            'id_modalidad_carrera__id_carrera', 
-            'id_modalidad_carrera__id_modalidad',
+        queryset = SGM_T_Matricula.objects.select_related(
+            'id_estudiante',
             'id_periodo',
-            'id_estado'
+            'id_estado',
         ).order_by('-fecha_matricula')
 
+        search_query = self.request.GET.get('q')
+        if search_query:
+            queryset = queryset.filter(
+                Q(id_estudiante__nombre__icontains=search_query) |
+                Q(id_estudiante__apellido__icontains=search_query) |
+                Q(id_estudiante__cedula__icontains=search_query) |
+                Q(id_estado__descripcion__icontains=search_query)
+            )
 
+        return queryset
+
+class MatriculaUpdateView(UpdateView):
+    model = SGM_T_Matricula
+    form_class = MatriculaForm
+    template_name = "matriculas/matricula_form.html"
+    success_url = reverse_lazy('matricula_list')
+
+
+class MatriculaDeleteView(DeleteView):
+    model = SGM_T_Matricula
+    template_name = "matriculas/delete.html"
+    success_url = reverse_lazy('matricula_list')
 # ——— Métodos de Pago ———
 class MetodoPagoListView(ListView):
     model = SGM_P_Metodo_Pago

@@ -14,6 +14,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'matriculas',
+    'django_select2',
+
 ]
 
 MIDDLEWARE = [
@@ -26,7 +28,10 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'gestor_matriculas.urls'
-
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',  # <- necesario
+]
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [],
@@ -63,6 +68,9 @@ LANGUAGE_CODE = 'es'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+TIME_ZONE = 'America/Guayaquil'  # Ajusta según tu zona horaria
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

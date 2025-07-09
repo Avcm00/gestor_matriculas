@@ -253,10 +253,9 @@ class MetodoPagoForm(BaseModelForm):
 class CarreraForm(BaseModelForm):
     class Meta:
         model = SGM_M_Carrera
-        fields = ['nombre', 'modalidad', 'descripcion', 'estado', 'semestres', 'id_campo']
+        fields = ['nombre', 'descripcion', 'estado', 'semestres', 'id_campo']
         labels = {
             'nombre': 'Nombre de la Carrera',
-            'modalidad': 'Modalidad',
             'descripcion': 'Descripción',
             'estado': 'Estado',
             'semestres': 'Número de Semestres',
@@ -266,10 +265,6 @@ class CarreraForm(BaseModelForm):
             'nombre': forms.TextInput(attrs={
                 'placeholder': 'Ej: Ingeniería en Sistemas, Medicina, etc.',
                 'maxlength': 200
-            }),
-            'modalidad': forms.TextInput(attrs={
-                'placeholder': 'Modalidad específica',
-                'maxlength': 50
             }),
             'descripcion': forms.Textarea(attrs={
                 'placeholder': 'Descripción detallada de la carrera...',

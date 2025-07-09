@@ -128,6 +128,7 @@ class SGM_P_Metodo_Pago(models.Model):
         ('TARJETA', 'Tarjeta de Crédito/Débito'),
         ('TRANSFERENCIA', 'Transferencia Bancaria'),
         ('CHEQUE', 'Cheque'),
+        ('PAYPAL','paypal')
     ]
     
     descripcion = models.CharField(max_length=50, choices=METODOS, unique=True)
@@ -393,7 +394,6 @@ class SGM_M_Carrera(models.Model):
     ]
     
     nombre = models.CharField(max_length=200, unique=True)
-    modalidad = models.CharField(max_length=50, blank=True)  # Mantengo del esquema original
     descripcion = models.TextField(blank=True)
     estado = models.CharField(max_length=20, choices=ESTADOS, default='ACTIVA')
     semestres = models.CharField(max_length=10)  # "8", "10", etc.
@@ -432,7 +432,7 @@ class SGM_M_Estudiante(models.Model):
         db_table = "SGM_M_Estudiante"
     
     def __str__(self):
-        return f"{self.nombre} {self.apellido}"
+        return f"{self.nombre} {self.apellido} {self.cedula}"
     
     @property
     def nombre_completo(self):

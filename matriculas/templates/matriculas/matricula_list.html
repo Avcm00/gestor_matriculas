@@ -1,6 +1,10 @@
 {% extends 'matriculas/base.html' %}
 {% block title %}Matrículas{% endblock %}
 {% block content %}
+<form method="get" class="mb-4 d-flex justify-content-end">
+  <input type="text" name="q" value="{{ request.GET.q }}" class="form-control w-auto me-2" placeholder="Buscar estudiante...">
+  <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
 <a href="{% url 'matricula_create' %}" class="btn btn-primary mb-3">
     Nueva Matrícula
 </a>
@@ -9,8 +13,7 @@
         <tr>
             <th class="px-4 py-2">ID</th>
             <th class="px-4 py-2">Estudiante</th>
-            <th class="px-4 py-2">Carrera</th>
-            <th class="px-4 py-2">Modalidad</th>
+            <th class="px-4 py-2">Carrera-Modalidad</th>
             <th class="px-4 py-2">Período</th>
             <th class="px-4 py-2">Estado</th>
             <th class="px-4 py-2">Fecha Matrícula</th>
@@ -21,20 +24,19 @@
         {% for matricula in object_list %}
         <tr class="border-t">
             <td class="px-4 py-2">{{ matricula.id }}</td>
-            <td class="px-4 py-2">{{ matricula.estudiante }}</td>
-            <td class="px-4 py-2">{{ matricula.carrera.nombre }}</td>
-            <td class="px-4 py-2">{{ matricula.modalidad }}</td>
-            <td class="px-4 py-2">{{ matricula.periodo }}</td>
-            <td class="px-4 py-2">
-                <span class="px-2 py-1 text-xs rounded
-                    {% if matricula.estado == 'Activa' %}bg-green-100 text-green-800
-                    {% elif matricula.estado == 'Inactiva' %}bg-red-100 text-red-800
-                    {% elif matricula.estado == 'Suspendida' %}bg-yellow-100 text-yellow-800
-                    {% else %}bg-gray-100 text-gray-800{% endif %}">
-                    {{ matricula.estado }}
-                </span>
-            </td>
+            <td class="px-4 py-2">{{ matricula.id_estudiante }}</td>
+            <td class="px-4 py-2">{{ matricula.id_modalidad_carrera }}</td>
+            <td class="px-4 py-2">{{ matricula.id_periodo }}</td>
+            <td class="px-4 py-2">{{ matricula.id_estado }}</td>
             <td class="px-4 py-2">{{ matricula.fecha_matricula|date:"d/m/Y" }}</td>
+            <td class="text-center">
+              <a href="{% url 'matricula_update' matricula.pk %}" class="text-primary me-2" title="Editar">
+                  <i class="bi bi-pencil-square"></i>
+              </a>
+              <a href="{% url 'matricula_delete' matricula.pk %}" class="text-danger" title="Eliminar">
+                  <i class="bi bi-trash-fill"></i>
+              </a>
+          </td>
           
         </tr>
         {% empty %}

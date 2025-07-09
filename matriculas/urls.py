@@ -1,9 +1,14 @@
 from django.urls import path
 from .views import (
+    
+    EstudianteDeleteView,
     EstudianteListView,
     EstudianteCreateView,
+    EstudianteUpdateView,
     MatriculaCreateView,
     MatriculaListView,
+    MatriculaUpdateView,
+    MatriculaDeleteView,
     PeriodoListView,
     PeriodoCreateView,
     EstadoMatriculaListView,
@@ -30,9 +35,15 @@ urlpatterns = [
     # — Estudiantes y Matrículas —
     path('', EstudianteListView.as_view(), name='estudiante_list'),
     path('estudiantes/nuevo/', EstudianteCreateView.as_view(), name='estudiante_create'),
+    path('estudiantes/editar/<int:pk>/', EstudianteUpdateView.as_view(), name='estudiante_update'),
+    path('estudiantes/eliminar/<int:pk>/', EstudianteDeleteView.as_view(), name='estudiante_delete'),
+
+    
     path('matriculas/', MatriculaListView.as_view(), name='matricula_list'),
     path('matriculas/crear/', MatriculaCreateView.as_view(), name='matricula_create'),
-
+    path('matriculas/editar/<int:pk>/', MatriculaUpdateView.as_view(), name='matricula_update'),
+    path('matriculas/eliminar/<int:pk>/', MatriculaDeleteView.as_view(), name='matricula_delete'),
+    
     # — Períodos Académicos —
     path('periodos/', PeriodoListView.as_view(), name='periodo_list'),
     path('periodos/nuevo/', PeriodoCreateView.as_view(), name='periodo_create'),
