@@ -58,7 +58,8 @@ class EstudianteListView(ListView):
         if query:
             queryset = queryset.filter(
                 Q(nombre__icontains=query) |
-                Q(nombre__icontains=query) |
+                Q(cedula__icontains=query) |
+                Q(id_ciudad__nombre__icontains=query) |
                 Q(apellido__icontains=query)
             )
         return queryset
