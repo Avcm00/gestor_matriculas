@@ -1,14 +1,22 @@
 from django.urls import path
 from .views import (
-    
+    CursoCreateView,
+    CursoDeleteView,
+    CursoListView,
+    CursoUpdateView,
     EstudianteDeleteView,
     EstudianteListView,
     EstudianteCreateView,
     EstudianteUpdateView,
+    MatriculaCreateFromEstudianteView,
     MatriculaCreateView,
     MatriculaListView,
     MatriculaUpdateView,
     MatriculaDeleteView,
+    OfertaCursoCreateView,
+    OfertaCursoDeleteView,
+    OfertaCursoListView,
+    OfertaCursoUpdateView,
     PeriodoListView,
     PeriodoCreateView,
     EstadoMatriculaListView,
@@ -38,7 +46,8 @@ urlpatterns = [
     path('estudiantes/editar/<int:pk>/', EstudianteUpdateView.as_view(), name='estudiante_update'),
     path('estudiantes/eliminar/<int:pk>/', EstudianteDeleteView.as_view(), name='estudiante_delete'),
 
-    
+    path('matriculas/crear/estudiante/<int:pk>/', MatriculaCreateFromEstudianteView.as_view(), name='matricula_create_from_estudiante'),
+
     path('matriculas/', MatriculaListView.as_view(), name='matricula_list'),
     path('matriculas/crear/', MatriculaCreateView.as_view(), name='matricula_create'),
     path('matriculas/editar/<int:pk>/', MatriculaUpdateView.as_view(), name='matricula_update'),
@@ -51,7 +60,16 @@ urlpatterns = [
     # — Estados de Matrícula —
     path('estados/', EstadoMatriculaListView.as_view(), name='estado_list'),
     path('estados/nuevo/', EstadoMatriculaCreateView.as_view(), name='estado_create'),
-
+# — Cursos —
+    path('cursos/', CursoListView.as_view(), name='curso_list'),
+    path('cursos/nuevo/', CursoCreateView.as_view(), name='curso_create'),
+    path('cursos/<int:pk>/editar/', CursoUpdateView.as_view(), name='curso_update'),
+    path('cursos/<int:pk>/eliminar/', CursoDeleteView.as_view(), name='curso_delete'),
+    # — Ofertas de Cursos por Período —
+    path('ofertas/', OfertaCursoListView.as_view(), name='oferta_list'),
+    path('ofertas/nueva/', OfertaCursoCreateView.as_view(), name='oferta_create'),
+    path('ofertas/<int:pk>/editar/', OfertaCursoUpdateView.as_view(), name='oferta_update'),
+    path('ofertas/<int:pk>/eliminar/', OfertaCursoDeleteView.as_view(), name='oferta_delete'),
     # — Carreras —
     path('carreras/', CarreraListView.as_view(), name='carrera_list'),
     path('carreras/nuevo/', CarreraCreateView.as_view(), name='carrera_create'),

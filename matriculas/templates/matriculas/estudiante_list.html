@@ -1,6 +1,12 @@
 {% extends 'matriculas/base.html' %}
 {% block title %}Estudiantes{% endblock %}
 {% block content %}
+<form method="get" class="mb-4 d-flex justify-content-end align-items-center">
+  <label for="id_q" class="me-2 mb-0 fw-bold">Buscar estudiante:</label>
+  <input type="text" id="id_q" name="q" value="{{ request.GET.q }}" class="form-control w-auto me-2" placeholder="Nombre o apellido">
+  <button type="submit" class="btn btn-primary">Buscar</button>
+</form>
+
 <div class="d-flex flex-column h-100">
   <div class="mb-3">
     <a href="{% url 'estudiante_create' %}" class="btn btn-primary">Nuevo Estudiante</a>
@@ -33,6 +39,10 @@
           <td class="px-4 py-2">{{ e.correo }}</td>
           <td class="px-4 py-2">{{ e.id_ciudad }}</td>
            <td class="text-center">
+             <a href="{% url 'matricula_create_from_estudiante' e.pk %}" class="text-success me-2" title="Matricular">
+                <i class="bi bi-journal-plus"></i>
+            </a>
+
               <a href="{% url 'estudiante_update' e.pk %}" class="text-primary me-2" title="Editar">
                   <i class="bi bi-pencil-square"></i>
               </a>

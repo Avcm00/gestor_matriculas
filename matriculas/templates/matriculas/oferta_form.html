@@ -1,0 +1,101 @@
+{% extends 'matriculas/base.html' %}
+{% block title %}
+  {% if form.instance.pk %}Editar Oferta{% else %}Registrar Oferta{% endif %}
+{% endblock %}
+
+{% block content %}
+<style>
+  .form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+  .form-group { margin-bottom: 1rem; }
+  .form-group label { display: block; font-weight: bold; margin-bottom: 0.4rem; color: #333; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%; padding: 0.5rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 6px;
+  }
+  .form-group .error { color: red; font-size: 0.875rem; margin-top: 0.3rem; }
+  .form-actions { display: flex; justify-content: flex-end; gap: 0.8rem; margin-top: 1.5rem; }
+  .btn { padding: 0.6rem 1.2rem; font-size: 1rem; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; }
+  .btn-cancel { background-color: #e74c3c; color: white; }
+  .btn-cancel:hover { background-color: #c0392b; transform: scale(1.05); }
+  .btn-save { background-color: #2ecc71; color: white; }
+  .btn-save:hover { background-color: #27ae60; transform: scale(1.05); }
+
+  /* Estilo para la info del docente */
+  #info-docente {
+    font-size: 0.9rem;
+    background: #f0f0f0;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    margin-top: 0.4rem;
+    color: #444;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    white-space: pre-line;
+  }
+</style>
+
+<div class="form-container">
+  <h2>{% if form.instance.pk %}Editar Oferta{% else %}Registrar Oferta{% endif %}</h2>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+
+        {% if field.name == "id_docente" %}
+          <div id="info-docente"></div>
+        {% endif %}
+
+        {% if field.errors %}
+          <div class="error">{{ field.errors|striptags }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <div class="form-actions">
+      <a href="{% url 'oferta_list' %}" class="btn btn-cancel">Cancelar</a>
+      <button type="submit" class="btn btn-save">Guardar</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const docentes = {{ docentes_info|safe }};
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const selectDocente = document.getElementById('id_id_docente');
+    const infoDiv = document.getElementById('info-docente');
+
+    function mostrarInfoDocente(id) {
+      const docente = docentes.find(d => d.id == id);
+      if (docente) {
+        infoDiv.innerHTML = `
+          <strong>${docente.nombre}</strong>
+          📧 Correo: ${docente.correo}
+          📱 Celular: ${docente.celular}
+          🎓 Título: ${docente.id_titulo__descripcion}
+          🏙️ Ciudad: ${docente.id_ciudad__nombre}
+          🏠 Dirección: ${docente.direccion || '-'}
+        `.replace(/\n/g, '<br>');
+      } else {
+        infoDiv.innerHTML = '';
+      }
+    }
+
+    selectDocente.addEventListener('change', () => {
+      mostrarInfoDocente(selectDocente.value);
+    });
+
+    // Mostrar info si ya hay docente seleccionado al cargar
+    if (selectDocente.value) {
+      mostrarInfoDocente(selectDocente.value);
+    }
+  });
+</script>
+
+{% endblock %}

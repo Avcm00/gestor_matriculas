@@ -14,7 +14,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'matriculas',
-    'django_select2',
 
 ]
 

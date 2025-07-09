@@ -336,6 +336,10 @@ class EstudianteForm(BaseModelForm):
                 'maxlength': 200
             })
         }
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            if 'estudiante' in self.initial:
+                self.fields['estudiante'].widget = forms.HiddenInput()
 
     def clean_cedula(self):
         cedula = self.cleaned_data.get('cedula')
@@ -476,28 +480,7 @@ class AsignaturaForm(BaseModelForm):
         return cleaned_data
 
 
-class CursoForm(BaseModelForm):
-    class Meta:
-        model = SGM_M_Curso
-        fields = ['nombre', 'id_asignatura', 'descripcion']
-        labels = {
-            'nombre': 'Nombre del Curso',
-            'id_asignatura': 'Asignatura',
-            'descripcion': 'Descripción'
-        }
-        widgets = {
-            'nombre': forms.TextInput(attrs={
-                'placeholder': 'Nombre del curso',
-                'maxlength': 200
-            }),
-            'id_asignatura': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'descripcion': forms.Textarea(attrs={
-                'placeholder': 'Descripción detallada del curso...',
-                'rows': 3
-            })
-        }
+
 
 
 class HorarioForm(BaseModelForm):
@@ -791,49 +774,27 @@ class PagoForm(BaseModelForm):
         if monto and monto <= 0:
             raise ValidationError("El monto debe ser mayor a cero.")
         return monto
-
-
-class OfertaCursoPeriodoForm(BaseModelForm):
+class OfertaCursoPeriodoForm(forms.ModelForm):
     class Meta:
         model = SGM_T_Oferta_Curso_Periodo
         fields = ['id_curso', 'id_periodo', 'id_docente', 'id_paralelo', 'cupos_max', 'estado']
-        labels = {
-            'id_curso': 'Curso',
-            'id_periodo': 'Período Académico',
-            'id_docente': 'Docente',
-            'id_paralelo': 'Paralelo',
-            'cupos_max': 'Cupos Máximos',
-            'estado': 'Estado'
-        }
         widgets = {
-            'id_curso': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'id_periodo': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'id_docente': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'id_paralelo': forms.Select(attrs={
-                'class': 'form-select'
-            }),
-            'cupos_max': forms.NumberInput(attrs={
-                'min': '1',
-                'max': '100',
-                'placeholder': 'Número de cupos'
-            }),
-            'estado': forms.Select(attrs={
-                'class': 'form-select'
-            })
+            'id_curso': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'id_periodo': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'id_docente': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'id_paralelo': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'cupos_max': forms.NumberInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'estado': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
         }
-
-    def clean_cupos_max(self):
-        cupos = self.cleaned_data.get('cupos_max')
-        if cupos and cupos <= 0:
-            raise ValidationError("El número de cupos debe ser mayor a cero.")
-        return cupos
-
+class CursoForm(forms.ModelForm):
+    class Meta:
+        model = SGM_M_Curso
+        fields = ['nombre', 'id_asignatura', 'descripcion']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'id_asignatura': forms.Select(attrs={'class': 'w-full px-3 py-2 border rounded-lg'}),
+            'descripcion': forms.Textarea(attrs={'class': 'w-full px-3 py-2 border rounded-lg', 'rows': 3}),
+        }
 
 class DetalleMatriculaForm(BaseModelForm):
     class Meta:

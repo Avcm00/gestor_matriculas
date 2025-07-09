@@ -1,0 +1,75 @@
+{% extends 'matriculas/base.html' %}
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="h4 fw-bold text-dark">Listado de Cursos</h2>
+    <a href="{% url 'curso_create' %}" class="btn btn-success">
+        <i class="fas fa-plus me-1"></i> Nuevo Curso
+    </a>
+</div>
+
+<table class="table table-hover bg-white shadow rounded">
+    <thead class="table-light">
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Asignatura</th>
+            <th>Descripción</th>
+            <th class="text-center">Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for curso in object_list %}
+        <tr>
+            <td>{{ curso.id }}</td>
+            <td>{{ curso.nombre }}</td>
+            <td>{{ curso.id_asignatura.nombre }}</td>
+            <td>{{ curso.descripcion|default_if_none:"-" }}</td>
+            <td class="text-center">
+                <a href="{% url 'curso_update' curso.pk %}" class="btn btn-sm btn-warning me-2">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <!-- Botón que llama a confirmación -->
+                <form id="form-curso-{{ curso.pk }}" action="{% url 'curso_delete' curso.pk %}" method="post" style="display: none;">
+                {% csrf_token %}
+                </form>
+
+                <button
+                    type="button"
+                    class="btn btn-sm btn-danger"
+                    onclick="confirmarEliminacionCurso('{{ curso.pk }}', '{{ curso.nombre|escapejs }}')">
+                     <i class="fas fa-trash-alt"></i>
+                </button>
+
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">No hay cursos registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+  function confirmarEliminacionCurso(id, nombre) {
+  Swal.fire({
+    title: '¿Eliminar curso?',
+    text: `¿Estás seguro de eliminar el curso: "${nombre}"? Esta acción no se puede deshacer.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      document.getElementById(`form-curso-${id}`).submit();
+    }
+  });
+}
+
+</script>
+
+{% endblock %}

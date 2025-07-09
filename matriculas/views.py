@@ -1,3 +1,5 @@
+import json
+from django.core.serializers.json import DjangoJSONEncoder
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.views.generic import ListView, CreateView, UpdateView,DeleteView
@@ -51,7 +53,16 @@ class EstudianteListView(ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return SGM_M_Estudiante.objects.select_related('id_ciudad__id_division__id_pais').order_by('apellido', 'nombre')
+        queryset = SGM_M_Estudiante.objects.select_related('id_ciudad__id_division__id_pais').order_by('apellido', 'nombre')
+        query = self.request.GET.get('q')
+        if query:
+            queryset = queryset.filter(
+                Q(nombre__icontains=query) |
+                Q(nombre__icontains=query) |
+                Q(apellido__icontains=query)
+            )
+        return queryset
+
 
 class EstudianteCreateView(CreateView):
     model = SGM_M_Estudiante
@@ -126,12 +137,39 @@ class ModalidadCreateView(CreateView):
 
 
 # ——— Matrículas ———
+class MatriculaCreateFromEstudianteView(CreateView):
+    model = SGM_T_Matricula  # Cambia por tu modelo real
+    form_class = MatriculaForm
+    template_name = 'matriculas/matricula_form.html'
+    success_url = reverse_lazy('matricula_list')
+
+    def get_initial(self):
+        initial = super().get_initial()
+        estudiante_id = self.kwargs.get('pk')
+        if estudiante_id:
+            initial['estudiante'] = estudiante_id
+        return initial
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if 'estudiante' in form.fields:
+            form.fields['estudiante'].queryset = SGM_M_Estudiante.objects.all()
+            form.fields['estudiante'].widget.attrs['readonly'] = True
+        return form
+
+
 class MatriculaCreateView(CreateView):
     model = SGM_T_Matricula
     form_class = MatriculaForm
     template_name = "matriculas/matricula_form.html"
     success_url = reverse_lazy('matricula_list')
-
+    def get_initial(self):
+        initial = super().get_initial()
+        estudiante_id = self.kwargs.get('pk')
+        if estudiante_id:
+            initial['estudiante'] = estudiante_id
+        return initial
+    
 class MatriculaListView(ListView):
     model = SGM_T_Matricula
     template_name = "matriculas/matricula_list.html"
@@ -306,37 +344,114 @@ class AsignaturaCreateView(CreateView):
 
 
 # ——— Cursos ———
-class CursoListView(ListView):
-    model = SGM_M_Curso
-    template_name = "matriculas/curso_list.html"
-    context_object_name = 'cursos'
-
-    def get_queryset(self):
-        return SGM_M_Curso.objects.select_related('id_asignatura').order_by('nombre')
-
-class CursoCreateView(CreateView):
-    model = SGM_M_Curso
-    form_class = CursoForm
-    template_name = "matriculas/curso_form.html"
-    success_url = reverse_lazy('curso_list')
-
-
-# ——— Ofertas de Cursos ———
-class OfertaCursoListView(ListView):
+class OfertaCursoListView(ListView): 
     model = SGM_T_Oferta_Curso_Periodo
-    template_name = "matriculas/ofertacurso_list.html"
-    context_object_name = 'ofertas'
+    template_name = 'matriculas/oferta_list.html'
+    context_object_name = 'object_list'
 
     def get_queryset(self):
-        return SGM_T_Oferta_Curso_Periodo.objects.select_related(
-            'id_curso__id_asignatura',
-            'id_periodo',
-            'id_docente',
-            'id_paralelo__id_jornada'
-        ).order_by('-id_periodo__fecha_inicio', 'id_curso__nombre')
+        queryset = super().get_queryset().select_related(
+            'id_curso', 'id_docente', 'id_periodo', 'id_paralelo'
+        )
+        curso = self.request.GET.get('curso', '').strip()
+        docente = self.request.GET.get('docente', '').strip()
+        estado = self.request.GET.get('estado', '').strip()
+        periodo = self.request.GET.get('periodo', '').strip()
+
+        if curso:
+            queryset = queryset.filter(id_curso_id=curso)
+
+        if docente:
+            # Fetch IDs of docentes matching the search criteria
+            docentes_ids = SGM_M_Docente.objects.filter(
+                Q(nombre__icontains=docente) |
+                Q(correo__icontains=docente) |
+                Q(celular__icontains=docente) |
+                Q(id_titulo_descripcion_icontains=docente) |
+                Q(id_ciudad_nombre_icontains=docente)
+            ).values_list('id', flat=True)
+
+            queryset = queryset.filter(id_docente_id__in=docentes_ids)
+
+        if estado:
+            queryset = queryset.filter(estado=estado)
+
+        if periodo:
+            queryset = queryset.filter(id_periodo_id=periodo)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filtros'] = {
+            'curso': self.request.GET.get('curso', ''),
+            'docente': self.request.GET.get('docente', ''),
+            'estado': self.request.GET.get('estado', ''),
+            'periodo': self.request.GET.get('periodo', ''),
+        }
+        context['cursos'] = SGM_M_Curso.objects.all()
+        context['estados'] = SGM_T_Oferta_Curso_Periodo.ESTADOS
+        context['periodos'] = SGM_P_Periodo_Academico.objects.all()
+        return context
+
 
 class OfertaCursoCreateView(CreateView):
     model = SGM_T_Oferta_Curso_Periodo
     form_class = OfertaCursoPeriodoForm
-    template_name = "matriculas/ofertacurso_form.html"
+    template_name = 'matriculas/oferta_form.html'
     success_url = reverse_lazy('oferta_list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        docentes = list(
+            SGM_M_Docente.objects.select_related('id_titulo', 'id_ciudad').values(
+            'id', 'nombre', 'correo', 'celular', 'direccion',
+            'id_titulo__descropcion',
+            'id_ciudad__nombre'
+        )
+    )
+        context['docentes_info'] = json.dumps(docentes, cls=DjangoJSONEncoder)
+        return context
+
+class OfertaCursoUpdateView(UpdateView):
+    model = SGM_T_Oferta_Curso_Periodo
+    form_class = OfertaCursoPeriodoForm
+    template_name = 'matriculas/oferta_form.html'
+    success_url = reverse_lazy('oferta_list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        docentes = list(
+            SGM_M_Docente.objects.select_related('id_titulo', 'id_ciudad').values(
+            'id', 'nombre', 'correo', 'celular', 'direccion',
+            'id_titulo__descripcion',
+            'id_ciudad__nombre'
+        )
+    )
+        context['docentes_info'] = json.dumps(docentes, cls=DjangoJSONEncoder)
+        return context
+
+class OfertaCursoDeleteView(DeleteView):
+    model = SGM_T_Oferta_Curso_Periodo
+    template_name = 'matriculas/delete.html'
+    success_url = reverse_lazy('oferta_list')
+# ——— Cursos ———
+class CursoListView(ListView):
+    model = SGM_M_Curso
+    template_name = 'matriculas/curso_list.html'
+    context_object_name = 'object_list'
+
+class CursoCreateView(CreateView):
+    model = SGM_M_Curso
+    form_class = CursoForm
+    template_name = 'matriculas/curso_form.html'
+    success_url = reverse_lazy('curso_list')
+
+class CursoUpdateView(UpdateView):
+    model = SGM_M_Curso
+    form_class = CursoForm
+    template_name = 'matriculas/curso_form.html'
+    success_url = reverse_lazy('curso_list')
+
+class CursoDeleteView(DeleteView):
+    model = SGM_M_Curso
+    template_name = 'matriculas/delete.html'
+    success_url = reverse_lazy('curso_list')
