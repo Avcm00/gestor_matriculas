@@ -21,9 +21,10 @@
           <th>Cédula</th>
           <th>Fecha de nacimiento</th>
           <th>Género</th>
-          <th>Número de celular</th>
+          <th>Celular</th>
           <th>Correo electrónico</th>
           <th>Ciudad</th>
+          <th>Es matriculado</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -38,6 +39,13 @@
           <td class="px-4 py-2">{{ e.celular }}</td>
           <td class="px-4 py-2">{{ e.correo }}</td>
           <td class="px-4 py-2">{{ e.id_ciudad }}</td>
+          <td class="px-4 py-2 text-center">
+            {% if e.matriculas.exists %}
+              <i class="bi bi-check-circle-fill text-success" title="Matriculado"></i>
+            {% else %}
+              <i class="bi bi-x-circle-fill text-danger" title="No matriculado"></i>
+            {% endif %}
+          </td>
            <td class="text-center">
              <a href="{% url 'matricula_create_from_estudiante' e.pk %}" class="text-success me-2" title="Matricular">
                 <i class="bi bi-journal-plus"></i>
