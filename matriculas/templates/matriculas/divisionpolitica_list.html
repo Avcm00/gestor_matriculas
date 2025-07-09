@@ -21,6 +21,14 @@
         <td class="px-4 py-2">{{ division.id }}</td>
         <td class="px-4 py-2">{{ division.nombre }}</td>
         <td class="px-4 py-2">{{ division.id_pais }}</td>
+        <td class="px-4 py-2">
+          <a href="{% url 'division_update' division.id %}" class="text-blue-500">
+            <i class="fas fa-edit"></i> 
+          </a>
+          <a href="{% url 'division_delete' division.id %}" class="text-red-500 ml-4">
+            <i class="fas fa-trash"></i>
+          </a>
+        </td>
       </tr>
       {% empty %}
       <tr>

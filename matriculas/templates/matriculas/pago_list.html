@@ -21,11 +21,19 @@
       {% for obj in object_list %}
       <tr class="border-t">
         <td class="px-4 py-2">{{ obj.id }}</td>
-        <td class="px-4 py-2">{{ obj.matricula.estudiante }}</td>
+        <td class="px-4 py-2">{{ obj.id_matricula.id_estudiante }}</td>
         <td class="px-4 py-2">{{ obj.fecha_pago }}</td>
         <td class="px-4 py-2">{{ obj.monto }}</td>
-        <td class="px-4 py-2">{{ obj.metodo.descripcion }}</td>
+        <td class="px-4 py-2">{{ obj.id_metodo.descripcion }}</td>
         <td class="px-4 py-2">{{ obj.estado }}</td>
+        <td class="px-4 py-2">
+          <a href="{% url 'pago_update' obj.id %}" class="text-blue-500">
+            <i class="fas fa-edit"></i> 
+          </a>
+          <a href="{% url 'pago_delete' obj.id %}" class="text-red-500 ml-4">
+            <i class="fas fa-trash"></i>
+          </a>
+        </td>
       </tr>
       {% empty %}
       <tr>

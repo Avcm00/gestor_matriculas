@@ -1,9 +1,15 @@
 from django.urls import path
 from .views import (
+    CampoEstudioUpdateView,
+    CarreraUpdateView,
+    CiudadDeleteView,
+    CiudadUpdateView,
     CursoCreateView,
     CursoDeleteView,
     CursoListView,
     CursoUpdateView,
+    DivisionPoliticaDeleteView,
+    DivisionPoliticaUpdateView,
     EstudianteDeleteView,
     EstudianteListView,
     EstudianteCreateView,
@@ -17,6 +23,10 @@ from .views import (
     OfertaCursoDeleteView,
     OfertaCursoListView,
     OfertaCursoUpdateView,
+    PagoDeleteView,
+    PagoUpdateView,
+    PaisDeleteView,
+    PaisUpdateView,
     PeriodoListView,
     PeriodoCreateView,
     EstadoMatriculaListView,
@@ -37,6 +47,7 @@ from .views import (
     CiudadCreateView,
     CampoEstudioListView,
     CampoEstudioCreateView,
+    PeriodoUpdateView,
 )
 
 urlpatterns = [
@@ -56,6 +67,7 @@ urlpatterns = [
     # — Períodos Académicos —
     path('periodos/', PeriodoListView.as_view(), name='periodo_list'),
     path('periodos/nuevo/', PeriodoCreateView.as_view(), name='periodo_create'),
+    path('periodos/editar/<int:pk>/', PeriodoUpdateView.as_view(), name='periodo_update'),
 
     # — Estados de Matrícula —
     path('estados/', EstadoMatriculaListView.as_view(), name='estado_list'),
@@ -73,6 +85,7 @@ urlpatterns = [
     # — Carreras —
     path('carreras/', CarreraListView.as_view(), name='carrera_list'),
     path('carreras/nuevo/', CarreraCreateView.as_view(), name='carrera_create'),
+    path('carreras/editar/<int:pk>/', CarreraUpdateView.as_view(), name='carrera_update'),
 
     # — Modalidades —
     path('modalidades/', ModalidadListView.as_view(), name='modalidad_list'),
@@ -85,20 +98,28 @@ urlpatterns = [
     # — Pagos —
     path('pagos/', PagoListView.as_view(), name='pago_list'),
     path('pagos/nuevo/', PagoCreateView.as_view(), name='pago_create'),
+    path('pagos/<int:pk>/editar/', PagoUpdateView.as_view(), name='pago_update'),
+    path('pagos/<int:pk>/eliminar/', PagoDeleteView.as_view(), name='pago_delete'),
      
-    # URLs para Países
+     # URLs para Países
     path('paises/', PaisListView.as_view(), name='pais_list'),
     path('paises/nuevo/', PaisCreateView.as_view(), name='pais_create'),
+    path('paises/<int:pk>/editar/', PaisUpdateView.as_view(), name='pais_update'),
+    path('paises/<int:pk>/eliminar/', PaisDeleteView.as_view(), name='pais_delete'),
     
     # URLs para Divisiones Políticas
     path('divisiones/', DivisionPoliticaListView.as_view(), name='division_list'),
     path('divisiones/nueva/', DivisionPoliticaCreateView.as_view(), name='division_create'),
-    
+    path('division/<int:pk>/editar/', DivisionPoliticaUpdateView.as_view(), name='division_update'),
+    path('division/<int:pk>/eliminar/', DivisionPoliticaDeleteView.as_view(), name='division_delete'),
     # URLs para Ciudades
     path('ciudades/', CiudadListView.as_view(), name='ciudad_list'),
     path('ciudades/nueva/', CiudadCreateView.as_view(), name='ciudad_create'),
+    path('ciudad/<int:pk>/editar/', CiudadUpdateView.as_view(), name='ciudad_update'),
+    path('ciudad/<int:pk>/eliminar/', CiudadDeleteView.as_view(), name='ciudad_delete'),
     
     # URLs para Campos de Estudio
     path('campos/', CampoEstudioListView.as_view(), name='campo_list'),
     path('campos/nuevo/', CampoEstudioCreateView.as_view(), name='campo_create'),
+    path('campos/editar/<int:pk>/', CampoEstudioUpdateView.as_view(), name='campo_update'),
 ]

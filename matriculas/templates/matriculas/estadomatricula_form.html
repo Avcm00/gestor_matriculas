@@ -4,6 +4,8 @@
   <h2 class="text-xl font-semibold mb-4">Registrar Estado de Matrícula</h2>
   <form method="post" class="space-y-4">{% csrf_token %}
     {{ form.as_p }}
+    <a href="{% url 'matricula_list' %}" class="btn btn-cancel">Cancelar</a>
+
     <button type="submit" class="btn btn-primary mb-3">Guardar</button>
   </form>
 {% endblock %}

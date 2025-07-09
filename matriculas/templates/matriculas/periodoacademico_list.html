@@ -23,6 +23,11 @@
         <td class="border px-4 py-2">{{ obj.fecha_fin }}</td>
         <td class="border px-4 py-2">{{ obj.inicio_matricula }}</td>
         <td class="border px-4 py-2">{{ obj.fin_matricula }}</td>
+        <td class="px-4 py-2">
+          <a href="{% url 'periodo_update' obj.id %}" class="text-blue-500">
+            <i class="fas fa-edit"></i> 
+          </a>
+        </td>
       </tr>
       {% empty %}
       <tr><td colspan="3" class="px-4 py-2">No hay registros.</td></tr>

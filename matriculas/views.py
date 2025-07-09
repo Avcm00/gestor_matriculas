@@ -80,6 +80,15 @@ class EstudianteDeleteView(DeleteView):
     model = SGM_M_Estudiante
     template_name = "matriculas/delete.html"
     success_url = reverse_lazy('estudiante_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
 
 # ——— Períodos Académicos ———
 class PeriodoListView(ListView):
@@ -93,7 +102,12 @@ class PeriodoCreateView(CreateView):
     template_name = "matriculas/periodoacademico_form.html"
     success_url = reverse_lazy('periodo_list')
 
-
+class PeriodoUpdateView(UpdateView):
+    model = SGM_P_Periodo_Academico
+    form_class = PeriodoAcademicoForm
+    template_name = "matriculas/periodoacademico_form.html"
+    success_url = reverse_lazy('periodo_list')
+    
 # ——— Estados de Matrícula ———
 class EstadoMatriculaListView(ListView):
     model = SGM_P_Estado_Matricula
@@ -121,7 +135,11 @@ class CarreraCreateView(CreateView):
     form_class = CarreraForm
     template_name = "matriculas/carrera_form.html"
     success_url = reverse_lazy('carrera_list')
-
+class CarreraUpdateView(UpdateView):
+    model = SGM_M_Carrera
+    form_class = CarreraForm
+    template_name = "matriculas/carrera_form.html"
+    success_url = reverse_lazy('carrera_list')
 
 # ——— Modalidades ———
 class ModalidadListView(ListView):
@@ -147,14 +165,17 @@ class MatriculaCreateFromEstudianteView(CreateView):
         initial = super().get_initial()
         estudiante_id = self.kwargs.get('pk')
         if estudiante_id:
-            initial['estudiante'] = estudiante_id
+            initial['id_estudiante'] = estudiante_id
         return initial
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        if 'estudiante' in form.fields:
-            form.fields['estudiante'].queryset = SGM_M_Estudiante.objects.all()
-            form.fields['estudiante'].widget.attrs['readonly'] = True
+        # Deshabilitar selección del estudiante
+        estudiante_id = self.kwargs.get('pk')
+        if estudiante_id and 'id_estudiante' in form.fields:
+            form.fields['id_estudiante'].queryset = SGM_M_Estudiante.objects.filter(pk=estudiante_id)
+            form.fields['id_estudiante'].initial = estudiante_id
+            form.fields['id_estudiante'].disabled = True  # hace que el campo sea visible pero no editable
         return form
 
 
@@ -205,6 +226,16 @@ class MatriculaDeleteView(DeleteView):
     model = SGM_T_Matricula
     template_name = "matriculas/delete.html"
     success_url = reverse_lazy('matricula_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
+    
 # ——— Métodos de Pago ———
 class MetodoPagoListView(ListView):
     model = SGM_P_Metodo_Pago
@@ -236,6 +267,25 @@ class PagoCreateView(CreateView):
     template_name = "matriculas/pago_form.html"
     success_url = reverse_lazy('pago_list')
 
+class PagoUpdateView(UpdateView):
+    model = SGM_T_Pago
+    form_class = PagoForm
+    template_name = "matriculas/pago_form.html"
+    success_url = reverse_lazy('pago_list')
+
+class PagoDeleteView(DeleteView):
+    model = SGM_T_Pago
+    template_name = "matriculas/delete.html"
+    success_url = reverse_lazy('pago_list')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
+    
 
 # ——— Países ———
 class PaisListView(ListView):
@@ -249,6 +299,26 @@ class PaisCreateView(CreateView):
     template_name = "matriculas/pais_form.html"
     success_url = reverse_lazy('pais_list')
 
+class PaisUpdateView(UpdateView):
+    model = SGM_P_Pais
+    form_class = PaisForm
+    template_name = "matriculas/pais_form.html"
+    success_url = reverse_lazy('pais_list')
+
+class PaisDeleteView(DeleteView):
+    model = SGM_P_Pais
+    template_name = "matriculas/delete.html"
+    success_url = reverse_lazy('pais_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
+    
 
 # ——— Divisiones Políticas ———
 class DivisionPoliticaListView(ListView):
@@ -265,6 +335,26 @@ class DivisionPoliticaCreateView(CreateView):
     template_name = "matriculas/divisionpolitica_form.html"
     success_url = reverse_lazy('division_list')
 
+class DivisionPoliticaUpdateView(UpdateView):
+    model = SGM_P_Division_Politica
+    form_class = DivisionPoliticaForm
+    template_name = "matriculas/divisionpolitica_form.html"
+    success_url = reverse_lazy('division_list')
+
+class DivisionPoliticaDeleteView(DeleteView):
+    model = SGM_P_Division_Politica
+    template_name = "matriculas/delete.html"
+    success_url = reverse_lazy('division_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
+    
 
 # ——— Ciudades ———
 class CiudadListView(ListView):
@@ -281,6 +371,27 @@ class CiudadCreateView(CreateView):
     template_name = "matriculas/ciudad_form.html"
     success_url = reverse_lazy('ciudad_list')
 
+class CiudadUpdateView(UpdateView):
+    model = SGM_P_Ciudad
+    form_class = CiudadForm
+    template_name = "matriculas/ciudad_form.html"
+    success_url = reverse_lazy('ciudad_list')
+
+class CiudadDeleteView(DeleteView):
+    model = SGM_P_Ciudad
+    template_name = "matriculas/delete.html"
+    success_url = reverse_lazy('ciudad_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
+    
+
 
 # ——— Campos de Estudio ———
 class CampoEstudioListView(ListView):
@@ -293,7 +404,11 @@ class CampoEstudioCreateView(CreateView):
     form_class = CampoEstudioForm
     template_name = "matriculas/campoestudio_form.html"
     success_url = reverse_lazy('campo_list')
-
+class CampoEstudioUpdateView(UpdateView):
+    model = SGM_P_Campo_Estudio
+    form_class = CampoEstudioForm
+    template_name = "matriculas/campoestudio_form.html"
+    success_url = reverse_lazy('campo_list')
 
 # ——— Docentes ———
 class DocenteListView(ListView):
@@ -433,6 +548,16 @@ class OfertaCursoDeleteView(DeleteView):
     model = SGM_T_Oferta_Curso_Periodo
     template_name = 'matriculas/delete.html'
     success_url = reverse_lazy('oferta_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)
+    
 # ——— Cursos ———
 class CursoListView(ListView):
     model = SGM_M_Curso
@@ -455,3 +580,12 @@ class CursoDeleteView(DeleteView):
     model = SGM_M_Curso
     template_name = 'matriculas/delete.html'
     success_url = reverse_lazy('curso_list')
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['next'] = self.request.GET.get('next', self.success_url)
+        return context
+
+    def get_success_url(self):
+        next_url = self.request.POST.get('next')
+        return next_url or str(self.success_url)

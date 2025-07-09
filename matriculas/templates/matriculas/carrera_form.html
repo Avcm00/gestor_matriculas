@@ -22,10 +22,10 @@
         </div>
       {% endfor %}
 
-      <button type="submit"
-              class="btn btn-primary mb-3">
-        Guardar
-      </button>
+      <div class="form-actions">
+        <a href="{% url 'carrera_list' %}" class="btn btn-cancel">Cancelar</a>
+        <button type="submit" class="btn btn-mb3">Guardar</button>
+    </div>
     </form>
   </div>
 {% endblock %}

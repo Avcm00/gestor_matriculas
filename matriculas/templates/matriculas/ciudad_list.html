@@ -23,6 +23,14 @@
         <td class="px-4 py-2">{{ ciudad.nombre }}</td>
         <td class="px-4 py-2">{{ ciudad.id_division.nombre }}</td>
         <td class="px-4 py-2">{{ ciudad.id_division.id_pais }}</td>
+        <td class="px-4 py-2">
+          <a href="{% url 'ciudad_update' ciudad.id %}" class="text-blue-500">
+            <i class="fas fa-edit"></i> 
+          </a>
+          <a href="{% url 'ciudad_delete' ciudad.id %}" class="text-red-500 ml-4">
+            <i class="fas fa-trash"></i>
+          </a>
+        </td>
       </tr>
       {% empty %}
       <tr>

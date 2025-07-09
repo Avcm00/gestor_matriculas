@@ -6,6 +6,8 @@
   <form method="post" class="space-y-4">
     {% csrf_token %}
     {{ form.as_p }}
+    <a href="{% url 'division_list' %}" class="btn btn-cancel">Cancelar</a>
+
     <button type="submit" class="btn btn-primary mb-3">
       Guardar
     </button>

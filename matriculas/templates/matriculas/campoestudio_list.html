@@ -21,6 +21,11 @@
     <tr class="border-t">
       <td class="px-4 py-2">{{ campo.id }}</td>
       <td class="px-4 py-2">{{ campo.nombre }}</td>
+        <td class="px-4 py-2">
+          <a href="{% url 'campo_update' campo.id %}" class="text-blue-500">
+            <i class="fas fa-edit"></i> 
+          </a>
+        </td>
     </tr>
     {% empty %}
     <tr>

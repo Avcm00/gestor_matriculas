@@ -18,9 +18,10 @@
       </div>
       <form method="post">
         {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
         <div class="modal-footer justify-content-center">
           <button type="submit" class="btn btn-danger">Eliminar</button>
-          <a href="{% url 'matricula_list' %}" class="btn btn-secondary">Cancelar</a>
+          <a href="{{ next }}" class="btn btn-secondary">Cancelar</a>
         </div>
       </form>
     </div>

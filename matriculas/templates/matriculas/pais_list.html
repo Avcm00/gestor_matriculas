@@ -17,6 +17,14 @@
       <tr class="border-t">
         <td class="px-4 py-2">{{ pais.id }}</td>
         <td class="px-4 py-2">{{ pais.nombre }}</td>
+        <td class="px-4 py-2">
+          <a href="{% url 'pais_update' pais.id %}" class="text-blue-500">
+            <i class="fas fa-edit"></i> 
+          </a>
+          <a href="{% url 'pais_delete' pais.id %}" class="text-red-500 ml-4">
+            <i class="fas fa-trash"></i>
+          </a>
+        </td>
       </tr>
       {% empty %}
       <tr>
